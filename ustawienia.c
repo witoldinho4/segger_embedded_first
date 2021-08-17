@@ -1,0 +1,40 @@
+#include "ustawienia.h"
+#include "stm32f407xx.h"
+
+
+void config_LED(void)
+{
+RCC->AHB1ENR|=RCC_AHB1ENR_GPIODEN; // wlaczenie magistrali LED  gpioD
+GPIOD->MODER|=GPIO_MODER_MODE13_0| GPIO_MODER_MODE12_0| GPIO_MODER_MODE14_0 |GPIO_MODER_MODE15_0; //ustawienie jako OUT
+
+
+}
+
+void LED_ALL_ON(void)
+{
+GPIOD->ODR|=LED3|LED4|LED5|LED6;
+
+
+}
+
+void LED_ALL_OFF(void)
+{
+GPIOD->ODR&=~(LED3|LED4|LED5|LED6);
+}
+
+void UART2_konfig(void)
+{
+RCC->APB1ENR|=RCC_APB1ENR_USART2EN;
+RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN;
+//GPIOA->MODER&=~(GPIO_MODER_MODE3_0);
+GPIOA->MODER|=GPIO_MODER_MODE2_0;
+
+GPIOA->AFR[0]|=7u<2;
+GPIOA->AFR[0]|=7u<3;
+
+USART2->BRR=ZEGAR/UART2_SPEED;
+
+NVIC_EnableIRQ(USART2_IRQn);
+
+
+}
